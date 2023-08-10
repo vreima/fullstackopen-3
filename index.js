@@ -43,6 +43,16 @@ app.post("/api/persons", (req, res) => {
     });
   }
 
+  if (
+    people.persons.findIndex(
+      (person) => person.name.toLowerCase() === data.name.toLowerCase()
+    ) >= 0
+  ) {
+    return res.status(400).json({
+      error: "name must be unique",
+    });
+  }
+
   if (!data.number) {
     return res.status(400).json({
       error: "number missing",
