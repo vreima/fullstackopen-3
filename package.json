@@ -7,7 +7,7 @@
     "start": "node index.js",
     "dev": "nodemon index.js",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build:ui": "del build -Recurse && cd ../fullstackopen/osa2/puhelinluettelo && npm run build && xcopy /E /I build ..\\..\\..\\fullstackopen-3",
+    "build:ui": "del build -Recurse && cd ../fullstackopen/osa2/puhelinluettelo && npm run build && xcopy /E /I build ..\\..\\..\\fullstackopen-3\\build",
     "deploy:full": "npm run build:ui && git add . && git commit -m uibuild && git push"
   },
   "repository": {
