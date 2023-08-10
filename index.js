@@ -1,15 +1,20 @@
 const express = require("express");
-const morgan = require("morgan");
+
 const app = express();
+
+const cors = require("cors");
+app.use(cors());
+
+app.use(express.static("build"));
 
 app.use(express.json());
 
+const morgan = require("morgan");
 morgan.token("payload", (req) =>
   req.method === "POST" ? JSON.stringify(req.body) : null
 );
 const morgan_conf =
   ":method :url :status :res[content-length] - :response-time ms :payload";
-
 app.use(morgan(morgan_conf));
 
 const people = {
@@ -100,7 +105,7 @@ app.get("/info", (req, res) => {
   res.type("text/plain").end(info);
 });
 
-const PORT = 3001;
+const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
