@@ -34,28 +34,30 @@ app.post("/api/persons", (req, res) => {
     });
   }
 
-  if (
-    people.persons.findIndex(
-      (person) => person.name.toLowerCase() === data.name.toLowerCase()
-    ) >= 0
-  ) {
-    return res.status(400).json({
-      error: "name must be unique",
-    });
-  }
+  Person.find({}).then((persons) => {
+    if (
+      !persons.every(
+        (person) => person.name.toLowerCase() !== data.name.toLowerCase()
+      )
+    )
+      return res.status(400).json({
+        error: "name must be unique",
+      });
 
-  if (!data.number) {
-    return res.status(400).json({
-      error: "number missing",
-    });
-  }
+    if (!data.number) {
+      return res.status(400).json({
+        error: "number missing",
+      });
+    }
 
-  const newPerson = Person({
-    name: data.name,
-    number: data.number,
+    const newPerson = Person({
+      name: data.name,
+      number: data.number,
+    });
+
+    newPerson.save().then((savedPerson) => res.status(201).json(savedPerson));
   });
 
-  newPerson.save().then((savedPerson) => res.status(201).json(savedPerson));
   // people.persons = people.persons.concat(newPerson);
 
   // return res.status(201).end();
