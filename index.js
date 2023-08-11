@@ -1,4 +1,6 @@
+require("dotenv").config();
 const express = require("express");
+const Person = require("./models/person");
 
 const app = express();
 
@@ -71,16 +73,15 @@ app.post("/api/persons", (req, res) => {
     });
   }
 
-  const id = Math.floor(Math.random() * 1000000);
-  const newPerson = {
+  const newPerson = Person({
     name: data.name,
     number: data.number,
-    id: id,
-  };
+  });
 
-  people.persons = people.persons.concat(newPerson);
+  newPerson.save().then((savedPerson) => res.status(201).json(savedPerson));
+  // people.persons = people.persons.concat(newPerson);
 
-  return res.status(201).end();
+  // return res.status(201).end();
 });
 
 app.delete("/api/persons/:id", (req, res) => {
