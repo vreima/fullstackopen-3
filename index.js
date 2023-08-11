@@ -19,33 +19,10 @@ const morgan_conf =
   ":method :url :status :res[content-length] - :response-time ms :payload";
 app.use(morgan(morgan_conf));
 
-const people = {
-  persons: [
-    {
-      name: "Arto Hellas",
-      number: "3231",
-      id: 1,
-    },
-    {
-      name: "Ada Lovelace",
-      number: "39-44-5323523",
-      id: 2,
-    },
-    {
-      name: "Dan Abramov",
-      number: "12-43-234345",
-      id: 3,
-    },
-    {
-      name: "Mary Poppendieck",
-      number: "39-23-6423122",
-      id: 4,
-    },
-  ],
-};
-
 app.get("/api/persons", (req, res) => {
-  res.json(people.persons);
+  Person.find({}).then((persons) => {
+    res.json(persons);
+  });
 });
 
 app.post("/api/persons", (req, res) => {
@@ -85,25 +62,43 @@ app.post("/api/persons", (req, res) => {
 });
 
 app.delete("/api/persons/:id", (req, res) => {
-  const id = Number(req.params.id);
-  people.persons = people.persons.filter((person) => person.id !== id);
+  const deleted = Person.findOneAndDelete({ _id: req.params.id }).catch(
+    (error) => res.status(204).end()
+  );
+  // const id = Number(req.params.id);
+  // people.persons = people.persons.filter((person) => person.id !== id);
 
   res.status(204).end();
 });
 
 app.get("/api/persons/:id", (req, res) => {
-  const id = Number(req.params.id);
-  const person = people.persons.find((person) => person.id === id);
+  // This is stupid, but I just did not manage to
+  // get findById() to work.
+  Person.find({}).then((persons) => {
+    persons.forEach((person) => {
+      if (person._id.toString() === req.params.id) {
+        res.json(person);
+      }
+    });
+    res.status(404).end();
+  });
+  // if (!person) return res.status(404).end();
 
-  if (!person) return res.status(404).end();
+  // res.json(person);
+  // const id = Number(req.params.id);
+  // const person = people.persons.find((person) => person.id === id);
 
-  res.json(person);
+  // if (!person) return res.status(404).end();
+
+  // res.json(person);
 });
 
 app.get("/info", (req, res) => {
-  const date = new Date();
-  const info = `Phonebook has info for ${people.persons.length} people\n\n${date}`;
-  res.type("text/plain").end(info);
+  Person.find({}).then((persons) => {
+    const date = new Date();
+    const info = `Phonebook has info for ${persons.length} people\n\n${date}`;
+    res.type("text/plain").end(info);
+  });
 });
 
 const PORT = process.env.PORT || 3001;
