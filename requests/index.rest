@@ -2,7 +2,7 @@ http://localhost:3001/info
 
 ###
 
-http://localhost:3001/api/persons/64d689f781e89ffddfd8f8c0
+http://localhost:3001/api/persons/64d665036a502c419c7c4555
 
 ###
 
@@ -20,10 +20,24 @@ POST http://localhost:3001/api/persons
 Content-Type: application/json
 
 {
-    "name": "Testi Henkilö",
+    "name": "Testi Henkilöz",
+    "number": "044 123 4567"
+}
+
+###
+
+PUT http://localhost:3001/api/persons/64d69ed4be96156257024f0c
+Content-Type: application/json
+
+{
+    "name": "ABCD",
     "number": "044 123 4567"
 }
 
 ###
 
 DELETE http://localhost:3001/api/persons/64d68c8a95a8a05db2b8206b
+
+###
+
+http://localhost:3001/api/xxx
